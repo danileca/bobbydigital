@@ -42,9 +42,17 @@ RUN pnpm ui:install && pnpm ui:build
 FROM node:22-bookworm
 ENV NODE_ENV=production
 
+# Install Claude CLI and persist config to volume
+RUN npm install -g @anthropic-ai/claude-code
+ENV CLAUDE_CONFIG_DIR=/data/.claude
+
 RUN apt-get update \
   && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     ca-certificates \
+    vim \
+    nano \
+    curl \
+    git \
   && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
