@@ -53,6 +53,7 @@ RUN apt-get update \
     nano \
     curl \
     git \
+    chromium \
   && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
@@ -69,9 +70,12 @@ RUN printf '%s\n' '#!/usr/bin/env bash' 'exec node /openclaw/dist/entry.js "$@"'
   && chmod +x /usr/local/bin/openclaw
 
 COPY src ./src
+COPY entrypoint.sh ./                                                                     
+RUN chmod +x entrypoint.sh
 
 # The wrapper listens on this port.
 ENV OPENCLAW_PUBLIC_PORT=8080
 ENV PORT=8080
 EXPOSE 8080
+ENTRYPOINT ["./entrypoint.sh"]                                                            
 CMD ["node", "src/server.js"]
